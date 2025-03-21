@@ -2,7 +2,10 @@ version: "3.8"
 
 services:
   node-app:
-    image: shivamswami982536/love:latest
+    # image: shivamswami982536/love:latest.
+    build:
+      context: ./
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
     networks:
@@ -44,5 +47,5 @@ networks:
   monitoring:
 
 volumes:
-  prometheus-data: # Named volume for Prometheus
-  grafana-data: # Named volume for Grafana
+  prometheus-data:
+  grafana-data:
