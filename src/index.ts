@@ -1,9 +1,9 @@
 import express from "express";
 import { middleware } from "./middkeware";
-import { requestCounterMiddleware } from "./monitoring/requestCounter";
+import { requestCounterMiddleware } from "./monitaring/requestCounter";
 import client from "prom-client";
-import { activeRequestCounterMiddleware } from "./monitoring/activeRequestCounter";
-import { requestDurationMiddleware } from "./monitoring/histogram";
+import { activeRequestCounterMiddleware } from "./monitaring/activeRequestCounter";
+import { requestDurationMiddleware } from "./monitaring/histogram";
 import { makeMultipleRequests } from "./attack";
 import cluster from 'cluster';
 import os from 'os';
