@@ -2,10 +2,9 @@ version: "3.8"
 
 services:
   node-app:
-    image: shivamswami982536/love:latest.
-    # build:
-    #   context: .
-    #   dockerfile: Dockerfile
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
     networks:
@@ -15,9 +14,6 @@ services:
     image: prom/prometheus:latest
     depends_on:
       - node-app
-    volumes:
-      - ./:/etc/prometheus
-      - prometheus-data:/prometheus # Persistent storage for Prometheus metrics
     ports:
       - "9090:9090"
     networks:
@@ -40,12 +36,8 @@ services:
       - GF_SMTP_PASSWORD=qsoejeuvwcfwiilt
       - GF_SMTP_FROM_ADDRESS=raviswamiji512@gmail.com
       - GF_SMTP_FROM_NAME=Grafana Alerts
-    volumes:
-      - grafana-data:/var/lib/grafana # Persistent storage for Grafana data
 
 networks:
   monitoring:
 
-volumes:
-  prometheus-data:
-  grafana-data:
+

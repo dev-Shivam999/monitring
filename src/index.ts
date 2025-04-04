@@ -4,27 +4,9 @@ import { requestCounterMiddleware } from "./monitaring/requestCounter";
 import client from "prom-client";
 import { activeRequestCounterMiddleware } from "./monitaring/activeRequestCounter";
 import { requestDurationMiddleware } from "./monitaring/histogram";
-import { makeMultipleRequests } from "./attack";
-import cluster from 'cluster';
-import os from 'os';
 
-const numCPUs = os.cpus().length;
 
-if (cluster.isPrimary) {
-    console.log(`Primary ${process.pid} is running`);
-    console.log(`Number of CPUs: ${numCPUs}`);
 
-    // Fork workers
-    for (let i = 0; i < 4; i++) {
-        cluster.fork();
-    }
-
-    cluster.on('exit', (worker, code, signal) => {
-        console.log(`Worker ${worker.process.pid} died`);
-        // Replace the dead worker
-        cluster.fork();
-    });
-} else {
     // Workers share the TCP connection
     const app = express();
     const PORT = 3000;
@@ -35,16 +17,7 @@ if (cluster.isPrimary) {
     app.use(activeRequestCounterMiddleware);
     app.use(requestDurationMiddleware);
 
-    const collectMetrics = client.collectDefaultMetrics;
-    collectMetrics({ register: client.register });
-
-    app.get("/attack", async (req, res) => {
-        let count = 10;
-        for (let i = 0; i < count * count; i++) {
-            count++;
-        }
-        res.send("Attack started");
-    });
+ 
 
     app.get("/user", (req, res) => {
         res.send({
@@ -71,4 +44,3 @@ if (cluster.isPrimary) {
         console.log(`Worker ${process.pid} started on http://localhost:${PORT}`);
         console.log(`Metrics endpoint available at http://localhost:${PORT}/metrics`);
     });
-}
